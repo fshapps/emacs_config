@@ -317,7 +317,7 @@ user-mail-address "john@hcmllc.co")
 ;; Configure capture mode templates
 (setq org-capture-templates
        '(("t" "Todo" entry (file+headline "/home/john/Dropbox/Notes/inbox.org" "Tasks")
-             "* TODO %?\n  %i\n)"
+             "* TODO %?\n  %i\n")
         ("i" "Idea" entry (file+headline "/home/john/Dropbox/Notes/inbox.org" "Ideas")
          "* %?\nAdded: %U\n")
         ("j" "Journal Entry" item (file+datetree "/home/john/Dropbox/Notes/journal.org")
