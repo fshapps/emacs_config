@@ -187,6 +187,13 @@ user-mail-address "john@hcmllc.co")
 ; https://github.com/syohex/emacs-anzu
 (global-anzu-mode +1)
 
+;; yasnippet templating
+;; https://github.com/joaotavora/yasnippet
+(add-to-list 'load-path
+               "~/.emacs.d/plugins/yasnippet")
+(require 'yasnippet)
+(yas-global-mode 1)
+
 ;;
 ;; ORG MODE
 ;;
