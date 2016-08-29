@@ -10,11 +10,6 @@
     ("c4a784404a2a732ef86ee969ab94ec8b8033aee674cd20240b8addeba93e1612" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "1a53efc62256480d5632c057d9e726b2e64714d871e23e43816735e1b85c144c" "6df30cfb75df80e5808ac1557d5cc728746c8dbc9bc726de35b15180fa6e0ad9" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(display-time-mode t)
  '(font-use-system-font t)
- '(newsticker-url-list
-   (quote
-    (("Reddit" "https://www.reddit.com/.rss?feed=fde5995c8058d111d32b8c07f8c115acc9ab1445&user=LazarGrier" nil nil nil)
-     ("Reddit Best Of" "https://www.reddit.com/r/bestof.rss" nil nil nil)
-     ("VentureBeat" "http://venturebeat.com/feed/" nil nil nil))))
  '(org-tags-column -90)
  '(tool-bar-mode nil))
 
@@ -323,12 +318,12 @@ user-mail-address "john@hcmllc.co")
 
 ;; Configure capture mode templates
 (setq org-capture-templates
-       '(("t" "Todo" entry (file+headline "/home/john/Dropbox/Notes/inbox.org" "Tasks")
-             "* TODO %?\n  %i\n")
-        ("i" "Idea" entry (file+headline "/home/john/Dropbox/Notes/inbox.org" "Ideas")
-         "* %?\nAdded: %U\n")
-        ("j" "Journal Entry" item (file+datetree "/home/john/Dropbox/Notes/journal.org")
-             "* %?\nEntered on %U\n  %i\n")))
+       '(("t" "Todo" entry (file "/home/john/Dropbox/Notes/inbox.org")
+             "* TODO %?\n")
+        ("i" "Idea" entry (file "/home/john/Dropbox/Notes/inbox.org")
+             "* %?\n")
+        ("j" "Journal Entry" plain (file+datetree "/home/john/Dropbox/Notes/journal.org")
+             "%?\n\nEntered on %U\n")))
 
 ;; Enable IDO
 (require 'ido)
@@ -403,3 +398,9 @@ user-mail-address "john@hcmllc.co")
 (setq org-export-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
