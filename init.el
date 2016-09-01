@@ -221,6 +221,10 @@ user-mail-address "john@hcmllc.co")
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
+;; Make navigating more efficient in org-mode
+;; http://emacs.stackexchange.com/questions/17502/how-to-navigate-most-efficiently-to-the-start-or-end-of-the-main-text-of-an-org/17513#17513
+(setq org-special-ctrl-a/e t)
+
 ; Set Org Mode to syntax highlight code blocks
 ; http://www.star.bris.ac.uk/bjm/org-basics.html
 (setq org-src-fontify-natively t)
@@ -351,18 +355,12 @@ user-mail-address "john@hcmllc.co")
 ;; Automatically change list bullets
 ;; Makes it easier to read deeply nested lists
 ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
-(setq org-list-demote-modify-bullet (quote (("+" . "-")
-                                            ("*" . "-")
-                                            ("1." . "-")
-                                            ("1)" . "-")
-                                            ("A)" . "-")
-                                            ("B)" . "-")
-                                            ("a)" . "-")
-                                            ("b)" . "-")
-                                            ("A." . "-")
-                                            ("B." . "-")
-                                            ("a." . "-")
-                                            ("b." . "-"))))
+(setq org-list-demote-modify-bullet (quote (("-" . "+")
+                                            ("+" . "-")
+					    ("a." . "a)")
+					    ("a)" . "a.")
+                                            ("1." . "1)")
+                                            ("1)" . "1."))))
 
 ;; Allow alphabetical list entries
 ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
