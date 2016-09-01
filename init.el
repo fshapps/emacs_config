@@ -342,6 +342,10 @@ user-mail-address "john@hcmllc.co")
 (require 'ido-vertical-mode)
 (ido-mode (ido-vertical-mode 1))
 
+;; Sort IDO results my modification time
+;; https://github.com/pkkm/ido-sort-mtime
+(ido-sort-mtime-mode 1)
+
 ;; Configure org-mode re-file
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 4))))
 
