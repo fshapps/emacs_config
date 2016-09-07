@@ -10,6 +10,11 @@
     ("c4a784404a2a732ef86ee969ab94ec8b8033aee674cd20240b8addeba93e1612" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "1a53efc62256480d5632c057d9e726b2e64714d871e23e43816735e1b85c144c" "6df30cfb75df80e5808ac1557d5cc728746c8dbc9bc726de35b15180fa6e0ad9" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(display-time-mode t)
  '(font-use-system-font t)
+ '(org-agenda-time-grid
+   (quote
+    ((daily weekly today require-timed remove-match)
+     "----------------"
+     (800 1000 1200 1400 1600 1800 2000))))
  '(org-tags-column -90)
  '(tool-bar-mode nil))
 
@@ -200,6 +205,10 @@ user-mail-address "john@hcmllc.co")
 ; Configure Exporter options
 (require 'ox-pandoc nil t)
 
+;; Configure exporting as ODT
+;; https://lists.gnu.org/archive/html/emacs-orgmode/2014-01/msg00599.html
+(require 'ox-odt)
+
 ;; Make clean view for lists the default
 ;; http://orgmode.org/manual/Clean-view.html
 (setq org-startup-indented t)
@@ -213,6 +222,13 @@ user-mail-address "john@hcmllc.co")
 
 ; Configure agenda view to search all org files
 (setq org-agenda-files '("/home/john/Dropbox/Notes"))
+
+;; PDF viewing / editing
+;; http://matt.hackinghistory.ca/2015/11/11/note-taking-with-pdf-tools/
+(pdf-tools-install)
+(eval-after-load 'org '(require 'org-pdfview))
+(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+(add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
 
 ; Short key bindings for capturing notes/links and switching to agenda.
 ; http://zeekat.nl/articles/making-emacs-work-for-me.html#sec-10-6
@@ -308,13 +324,15 @@ user-mail-address "john@hcmllc.co")
 
 ;; Sorting order for tasks on the agenda
 ;; http://pragmaticemacs.com/emacs/org-mode-basics-vii-a-todo-list-with-schedules-and-deadlines/ 
-(setq org-agenda-sorting-strategy
-(quote
-((agenda priority-down deadline-down timestamp-down scheduled-down category-keep tag-up))))
+;; (setq org-agenda-sorting-strategy
+;; (quote
+;; ((agenda priority-down deadline-down timestamp-down scheduled-down category-keep tag-up))))
 
-;; Start the weekly agenda on Monday
-;; ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
+;; Tweak Time Grid view
+;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
+;; http://dept.stat.lsa.umich.edu/~jerrick/org_agenda_calendar.html
 (setq org-agenda-start-on-weekday 1)
+(setq org-agenda-timegrid-use-ampm 1)
 
 ; Configure capture mode
 ;; (setq org-default-notes-file (concat org-directory "/home/john/Dropbox/Notes/inbox.org"))
@@ -359,8 +377,8 @@ user-mail-address "john@hcmllc.co")
 ;; Automatically change list bullets
 ;; Makes it easier to read deeply nested lists
 ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
-(setq org-list-demote-modify-bullet (quote (("-" . "+")
-                                            ("+" . "-")
+(setq org-list-demote-modify-bullet (quote (("+" . "-")
+                                            ("-" . "*")
 					    ("a." . "a)")
 					    ("a)" . "a.")
                                             ("1." . "1)")
