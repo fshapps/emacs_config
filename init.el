@@ -1,22 +1,11 @@
 ;; STARTUP
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("c4a784404a2a732ef86ee969ab94ec8b8033aee674cd20240b8addeba93e1612" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "1a53efc62256480d5632c057d9e726b2e64714d871e23e43816735e1b85c144c" "6df30cfb75df80e5808ac1557d5cc728746c8dbc9bc726de35b15180fa6e0ad9" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
- '(display-time-mode t)
- '(font-use-system-font t)
- '(org-agenda-time-grid
-   (quote
-    ((daily weekly today require-timed remove-match)
-     "----------------"
-     (800 1000 1200 1400 1600 1800 2000))))
- '(org-tags-column -90)
- '(tool-bar-mode nil))
+  '(custom-enabled-themes (quote (smart-mode-line-dark))))
 
 ;; Load MELPA & ELPA package managers
 (require 'package)
@@ -27,7 +16,9 @@
 (package-initialize)
 
 ;; Set theme
-(load-theme 'monokai t)
+;; (load-theme 'monokai t)
+;; (load-theme 'badwolf t)
+(load-theme 'zenburn t)
 
 ;; Set default directory
 (setq default-directory "/home/john/Dropbox/Notes")
@@ -56,6 +47,22 @@
 ;; Enable window numbering mode
 ;; https://github.com/luismbo/wn-mode
 (wn-mode)
+
+;; Set default frame size
+;; http://ergoemacs.org/emacs/emacs_customize_default_window_size.html
+;; initial window
+(setq initial-frame-alist
+      '(
+        (width . 100) ; character
+        (height . 50) ; lines
+        ))
+
+;; default/sebsequent window
+(setq default-frame-alist
+      '(
+        (width . 100) ; character
+        (height . 50) ; lines
+        ))
 
 ;; Set author name and email
 (setq user-full-name "John C. Haprian"
@@ -114,7 +121,8 @@ user-mail-address "john@hcmllc.co")
       `((".*" ,temporary-file-directory t)))
 
 ; Use smart mode line to clean up the modeline display a little.
-; http://zeekat.nl/articles/making-emacs-work-for-me.html#sec-10-6
+					; http://zeekat.nl/articles/making-emacs-work-for-me.html#sec-10-6
+(setq sml/no-confirm-load-theme t)
 (sml/setup)
 (sml/apply-theme 'dark)
 (setq sml/shorten-directory t)
@@ -208,6 +216,10 @@ user-mail-address "john@hcmllc.co")
 ;; Configure exporting as ODT
 ;; https://lists.gnu.org/archive/html/emacs-orgmode/2014-01/msg00599.html
 (require 'ox-odt)
+
+;; Fix annoying ODT template error
+;; https://lists.gnu.org/archive/html/emacs-orgmode/2014-08/msg00953.html
+(setq org-odt-data-dir "/usr/share/emacs/24.5/etc/org")
 
 ;; Make clean view for lists the default
 ;; http://orgmode.org/manual/Clean-view.html
@@ -325,14 +337,12 @@ user-mail-address "john@hcmllc.co")
 ;; Sorting order for tasks on the agenda
 ;; http://pragmaticemacs.com/emacs/org-mode-basics-vii-a-todo-list-with-schedules-and-deadlines/ 
 ;; (setq org-agenda-sorting-strategy
-;; (quote
-;; ((agenda priority-down deadline-down timestamp-down scheduled-down category-keep tag-up))))
-
-;; Tweak Time Grid view
-;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
-;; http://dept.stat.lsa.umich.edu/~jerrick/org_agenda_calendar.html
-(setq org-agenda-start-on-weekday 1)
-(setq org-agenda-timegrid-use-ampm 1)
+;;       (quote
+;;    ((agenda deadline-up priority-down)
+;;     (todo priority-down category-keep)
+;;     (tags priority-down category-keep)
+;;     (search category-keep))))
+;;((agenda priority-down deadline-down timestamp-down scheduled-down category-keep tag-up))))
 
 ; Configure capture mode
 ;; (setq org-default-notes-file (concat org-directory "/home/john/Dropbox/Notes/inbox.org"))
@@ -379,10 +389,11 @@ user-mail-address "john@hcmllc.co")
 ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
 (setq org-list-demote-modify-bullet (quote (("+" . "-")
                                             ("-" . "*")
-					    ("a." . "a)")
+					    ("*" . "+")
 					    ("a)" . "a.")
-                                            ("1." . "1)")
-                                            ("1)" . "1."))))
+					    ("a." . "a)")
+                                            ("1)" . "1.")
+                                            ("1." . "1)"))))
 
 ;; Allow alphabetical list entries
 ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
@@ -418,9 +429,3 @@ user-mail-address "john@hcmllc.co")
 (setq org-export-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
