@@ -5,7 +5,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-  '(custom-enabled-themes (quote (smart-mode-line-dark))))
+ '(custom-enabled-themes (quote (smart-mode-line-dark))))
 
 ;; Load MELPA & ELPA package managers
 (require 'package)
@@ -14,6 +14,9 @@
 (when (< emacs-major-version 24)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
+
+;; Set default font
+(setq default-frame-alist '((font . "Inconsolata-14")))
 
 ;; Set theme
 ;; (load-theme 'monokai t)
@@ -39,7 +42,14 @@
 
 ;; auto close bracket insertion. New in emacs 24
 ;; http://ergoemacs.org/emacs/emacs_insert_brackets_by_pair.html
+;; http://prodissues.com/2016/10/electric-pair-mode-in-emacs.html
 (electric-pair-mode 1)
+(setq electric-pair-pairs '(
+                            (?\" . ?\")
+                            (?\` . ?\`)
+                            (?\( . ?\))
+                            (?\{ . ?\})
+                            ) )
 
 ;; Disable scroll bars
 (scroll-bar-mode -1)
@@ -237,10 +247,10 @@ user-mail-address "john@hcmllc.co")
 
 ;; PDF viewing / editing
 ;; http://matt.hackinghistory.ca/2015/11/11/note-taking-with-pdf-tools/
-(pdf-tools-install)
-(eval-after-load 'org '(require 'org-pdfview))
-(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
-(add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
+;; (pdf-tools-install)
+;; (eval-after-load 'org '(require 'org-pdfview))
+;; (add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+;; (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
 
 ; Short key bindings for capturing notes/links and switching to agenda.
 ; http://zeekat.nl/articles/making-emacs-work-for-me.html#sec-10-6
@@ -258,7 +268,13 @@ user-mail-address "john@hcmllc.co")
 (setq org-src-fontify-natively t)
 
 ;; Add workflow change tracking to the drawer
-(setq org-log-into-drawer t)
+;; (setq org-log-into-drawer t)
+
+;; Get rid of those damn blank lines
+;; http://orgmode.org/worg/org-faq.html
+(setq org-blank-before-new-entry nil)
+
+
 
 ; Add task workflows
 ; http://orgmode.org/worg/org-tutorials/org4beginners.html
@@ -351,10 +367,16 @@ user-mail-address "john@hcmllc.co")
 ;; Configure capture mode templates
 (setq org-capture-templates
        '(("t" "Todo" entry (file "/home/john/Dropbox/Notes/inbox.org")
-             "* TODO %?\n")
-        ("i" "Idea" entry (file "/home/john/Dropbox/Notes/inbox.org")
-             "* %?\n")
-        ("j" "Journal Entry" plain (file+datetree "/home/john/Dropbox/Notes/journal.org")
+	  "* TODO %?
+:PROPERTIES:
+:CREATED: %U
+:END:")
+        ("n" "Note" entry (file "/home/john/Dropbox/Notes/inbox.org")
+             "* %?
+:PROPERTIES:
+:CREATED: %U
+:END:")
+        ("j" "Journal" plain (file+datetree "/home/john/Dropbox/Notes/journal.org")
              "%?\n\nEntered on %U\n")))
 
 ;; Enable IDO
@@ -375,7 +397,7 @@ user-mail-address "john@hcmllc.co")
 (ido-sort-mtime-mode 1)
 
 ;; Configure org-mode re-file
-(setq org-refile-targets '((org-agenda-files . (:maxlevel . 4))))
+(setq org-refile-targets '((org-agenda-files . (:maxlevel . 8))))
 
 ;; Make org-mode refiling work properly w/ IDO
 (setq org-completion-use-ido t)
@@ -429,3 +451,14 @@ user-mail-address "john@hcmllc.co")
 (setq org-export-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-clock-into-drawer "CLOCK")
+ '(org-log-done (quote time))
+ '(org-log-into-drawer "NOTES")
+ '(org-log-redeadline (quote time))
+ '(org-log-refile (quote time))
+ '(org-log-reschedule (quote time)))
