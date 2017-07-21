@@ -53,7 +53,7 @@
 
 ;; set up emacs so that each file opens in a new window
 ;; http://ergoemacs.org/emacs/emacs_make_modern.html
-(setq pop-up-frames t)
+;; (setq pop-up-frames t)
 
 ;; Configure capture mode to open a dedicated window
 ;; https://stackoverflow.com/questions/15253005/in-emacs-org-mode-how-do-i-get-org-capture-to-open-in-a-full-sized-window...hmmm. Didn't work.
