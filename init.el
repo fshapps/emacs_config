@@ -29,10 +29,6 @@
 ;; http://superuser.com/questions/349943/how-to-awake-emacs-gui-after-pressing-ctrlz
 (global-unset-key (kbd "C-z"))
 
-;; Stop whining about deleting backups
-;; https://nurikabe.blog/2008/04/11/prevent-emacs-from-whining-about-excess-backup-versions/
-(setq delete-old-versions t)
-
 ;; Highlight parens
 ;; https://www.emacswiki.org/emacs/ShowParenMode?_utm_source=1-2-2
 (show-paren-mode 1)
@@ -79,10 +75,6 @@ user-mail-address "john@hcmllc.co")
 ;; Restore Desktop
 ;; (desktop-save-mode 1)
 
-;; Prevent emacs from clobbering orig file date
-;; http://ergoemacs.org/emacs/emacs_make_modern.html
-(setq backup-by-copying t)
-
 ;; Enable flyspell mode by default
 ;; http://stackoverflow.com/questions/6860750/how-to-enable-flyspell-mode-in-emacs-for-all-files-and-all-major-modes
 ;; This does the squiggly line thingy
@@ -115,24 +107,6 @@ user-mail-address "john@hcmllc.co")
 
 ;; It can be difficult to remember the full names of Emacs commands, so I use icomplete-mode for minibuffer completion. This also makes it easier to discover commands.
 (icomplete-mode 1)
-
-;; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-
-;; Keep multiple backups of edited files. Poor man version control.
-;; https://aqeelakber.com/2016/12/21/emacs-org-mode-journal-and-log/
-(setq version-control t        ;; OpenVMS-esque
-      backup-by-copying t      ;; Copy-on-write-esque
-      kept-new-versions 64     ;; Indeliable-ink-esque
-      kept-old-versions 0      ;; 
-      delete-old-versions nil  ;; 
-      )
-(setq backup-directory-alist   ;; Save backups in $(pwd)/.bak
-      '(("." . ".bak"))        ;;
-      )
 
 ;; Don't allow editing of folded regions
 ;; https://aqeelakber.com/2016/12/21/emacs-org-mode-journal-and-log/
@@ -173,6 +147,20 @@ user-mail-address "john@hcmllc.co")
       scroll-conservatively 100000
       scroll-preserve-screen-position 1)
 
+;;
+;; BACKUPS
+;;
+
+;; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
+(setq backup-directory-alist   ;; Save backups in $(pwd)/.bak
+      '(("." . ".bak"))        ;;
+      )
+
 ;; Save all the histories
 (setq savehist-file "~/.emacs.d/savehist")
 (savehist-mode 1)
@@ -184,6 +172,17 @@ user-mail-address "john@hcmllc.co")
         search-ring
         regexp-search-ring))
 
+;; Prevent emacs from clobbering orig file date
+;; http://ergoemacs.org/emacs/emacs_make_modern.html
+(setq backup-by-copying t)
+
+;; Stop whining about deleting backups
+;; https://nurikabe.blog/2008/04/11/prevent-emacs-from-whining-about-excess-backup-versions/
+(setq delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t)
+
 ;; Disable the toolbar
 (tool-bar-mode -1)
 
@@ -192,8 +191,8 @@ user-mail-address "john@hcmllc.co")
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 
 ;; Use smex to complete interactive commands
-(require 'smex)
-(smex-initialize)
+;; (require 'smex)
+;; (smex-initialize)
 
 ;; Make buffer names unique
 (require 'uniquify)
@@ -240,15 +239,38 @@ user-mail-address "john@hcmllc.co")
     (eww url)))
 
 ;;
+;; IVY + SWIPER
+;;
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(global-set-key "\C-s" 'swiper)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "<f6>") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+
+;;
 ;; ORG MODE
 ;;
 
 ;; Needed for MobileOrg?
 ;; https://stackoverflow.com/questions/11822353/how-to-make-org-mobile-work-in-android
-(require 'org)
-(setq org-directory "~/Dropbox/Notes")
-(setq org-mobile-directory "~/Dropbox/MobileOrg")
-(setq org-mobile-inbox-for-pull "~/Dropbox/Notes/from-mobile.org")
+;; (require 'org)
+;; (setq org-directory "~/Dropbox/Notes")
+;; (setq org-mobile-directory "~/Dropbox/MobileOrg")
+;; (setq org-mobile-inbox-for-pull "~/Dropbox/Notes/from-mobile.org")
 
 ;; Org-Agenda needs to be loaded before calling org-agenda works.
 ; http://zeekat.nl/articles/making-emacs-work-for-me.html#sec-10-6
@@ -292,7 +314,7 @@ user-mail-address "john@hcmllc.co")
 (setq org-src-fontify-natively t)
 
 ;; Add workflow change tracking to the drawer
-(setq org-log-into-drawer t)
+;; (setq org-log-into-drawer t)
 
 ;; Get rid of those damn blank lines
 ;; http://orgmode.org/worg/org-faq.html
@@ -310,7 +332,7 @@ user-mail-address "john@hcmllc.co")
 ; http://doc.norang.ca/org-mode.html
 (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "red" :weight bold)
-              ("IN PROGRESS" :foreground "yellow" :weight bold)
+              ("IN PROGRESS" :foreground "gold" :weight bold)
               ("WAITING" :foreground "lightskyblue" :weight bold)
               ("SOMEDAY" :foreground "magenta" :weight bold)
               ("DONE" :foreground "forest green" :weight bold)
@@ -352,11 +374,11 @@ user-mail-address "john@hcmllc.co")
 
 ;; Causes Org to insert annotation when task deadline changed
 ;; http://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html
-(setq org-log-redeadline (quote time))
+;; (setq org-log-redeadline (quote time))
 
 ;; Causes Org to insert annotation when scheduled task date changes
 ;; http://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html
-(setq org-log-reschedule (quote time))
+;; (setq org-log-reschedule (quote time))
 
 ;; Hide formatting characters for bold, italics, etc.
 ;; https://www.reddit.com/r/emacs/comments/4bzj6a/how_to_get_orgmode_emphasis_markup_et_al_to/
@@ -368,54 +390,21 @@ user-mail-address "john@hcmllc.co")
 
 ;; Configure capture mode templates
 (setq org-capture-templates
-       '(("t" "Todo" entry (file "/home/john/Dropbox/Notes/inbox.org")
-	  "* TODO %?
-:PROPERTIES:
-:CREATED: %U
-:END:")
-        ("n" "Note" entry (file "/home/john/Dropbox/Notes/inbox.org")
-             "* %?
-:PROPERTIES:
-:CREATED: %U
-:END:")
-        ("j" "Journal" plain (file+datetree "/home/john/Dropbox/Notes/journal.org")
-	 "%?
-
-%U"
-:empty-lines 1)))
-
-;; IVY Search
-;; https://github.com/abo-abo/swiper
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "<f6>") 'ivy-resume)
-
-;; Enable IDO
-;; (require 'ido)
-;; (ido-mode 1)
-;; (ido-everywhere 1)
-
-;; Use IDO for everything
-;; (require 'ido-ubiquitous)
-;; (ido-ubiquitous-mode 1)
-
-;; Enable IDO vertical mode
-;; (require 'ido-vertical-mode)
-;; (ido-mode (ido-vertical-mode 1))
-
-;; Sort IDO results my modification time
-;; https://github.com/pkkm/ido-sort-mtime
-;; (ido-sort-mtime-mode 1)
+      '(("t" "Todo" entry (file "/home/john/Dropbox/Notes/inbox.org")
+	 "* TODO %?")
+	 ("n" "Note" entry (file "/home/john/Dropbox/Notes/inbox.org")
+	  "* %?")
+	 ("e" "Eve" plain (file+datetree "/home/john/Dropbox/Notes/eveonline.org" "Journal")
+	  "%?")
+	 ("j" "Journal" plain (file+datetree "/home/john/Dropbox/Notes/journal.org")
+	  "%?")))
 
 ;; Make org-mode refiling work properly w/ IDO
 ;; Allow refile to top level of files
-(setq org-refile-use-outline-path 'file)
-(setq org-completion-use-ido t)
-(setq org-outline-path-complete-in-steps nil)
-(setq org-reverse-note-order t)
+;; (setq org-refile-use-outline-path 'file)
+;; (setq org-completion-use-ido t)
+;; (setq org-outline-path-complete-in-steps nil)
+;; (setq org-reverse-note-order t)
 
 ;; Configure org-mode re-file
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 8))))
@@ -503,7 +492,7 @@ user-mail-address "john@hcmllc.co")
  '(display-battery-mode t)
  '(elfeed-feeds
    (quote
-    ("https://scienceofsharp.wordpress.com/feed/" "http://bulletjournal.com/feed/" "http://www.threestaples.com/blog?format=RSS" "http://www.wellappointeddesk.com/feed/" "http://www.penaddict.com/blog?format=RSS" "http://wvs.topleftpixel.com/index.rdf" "http://jakubsan.tumblr.com/rss" "http://alanfriedman.tumblr.com/rss" "http://bookshelfporn.com/rss" "http://www.flickr.com/groups_feed.gne?id=35468150438@N01&format=rss_200" "http://clevelandprintroom.com/feed/" "http://www.flickr.com/recent_comments_feed.gne?id=94043197@N00&format=rss_200" "http://api.flickr.com/services/feeds/groups_pool.gne?id=46284008@N00&format=rss_200" "http://gigapan.blogspot.com/feeds/posts/default" "http://www.marcsijan.com/feed/" "http://feeds2.feedburner.com/marcofolio" "http://www.flickr.com/services/feeds/photos_friends.gne?user_id=94043197@N00&format=atom_03&friends=0&display_all=1" "http://api.flickr.com/services/feeds/photos_public.gne?id=94431609@N00&lang=en-us&format=rss_200" "http://api.flickr.com/services/feeds/photos_public.gne?id=58607835@N00&format=atom" "http://fantasygoat.livejournal.com/data/rss" "http://prostheticknowledge.tumblr.com/rss" "http://riotclitshave.livejournal.com/data/atom" "http://riotclitshave.tumblr.com/rss" "http://scifispaceships.tumblr.com/rss" "http://api.flickr.com/services/feeds/groups_pool.gne?id=88514644@N00&format=rss_200" "http://livelymorgue.tumblr.com/rss" "http://transformerstation.org/News/files/feed.xml" "http://api.flickr.com/services/feeds/photos_public.gne?id=48889065425@N01&lang=en-us&format=rss_200" "http://feeds.feedburner.com/avc" "http://feeds.feedburner.com/advancedriskology" "http://feeds.feedburner.com/InstigatorBlog" "http://startuplessonslearned.blogspot.com/feeds/posts/default" "http://sethgodin.typepad.com/seths_blog/atom.xml" "http://www.skmurphy.com/feed/" "http://stratechery.com/feed/" "http://transitionculture.org/feed/" "http://feeds.feedburner.com/ChefSteps" "http://akroncanton.craigslist.org/search/sso?catAbb=sso&excats=97-21-63-6&query=laminate%20flooring&sort=date&format=rss" "http://feeds.feedburner.com/JCCharts" "http://flowingdata.com/feed" "http://feeds.feedburner.com/FlowingData" "http://feeds.feedburner.com/InformationIsBeautiful" "https://www.rstudio.com/feed/" "http://amritrichmond.tumblr.com/rss" "http://feeds.feedburner.com/design-milk" "https://www.format.com/magazine/feed" "http://uxmag.com/rss.xml" "http://3quarksdaily.blogs.com/3quarksdaily/atom.xml" "http://feeds.feedburner.com/alansjourney" "http://www.badassoftheweek.com/rss.xml" "http://boingboing.net/rss.xml" "http://www.dailydot.com/feed/summary/latest/" "http://feeds.feedburner.com/TheThrillingWonderStory" "http://decodedpast.com/feed" "http://www.reddit.com/r/DepthHub/.rss" "http://www.farnamstreetblog.com/feed/atom/" "http://www.kungfugrippe.com/rss" "http://lesswrong.com/.rss" "http://xml.metafilter.com/atom.xml" "http://feeds.feedburner.com/OpenCulture" "http://polyrad.info/feed/" "http://www.quotationspage.com/data/qotd.rss" "http://sciencehorrors.tumblr.com/rss" "http://dilbert.com/blog/entry.feed/" "http://sthelenaonline.org/feed/" "http://stackexchangenocontext.tumblr.com/rss" "http://technabob.com/blog/feed/" "http://thechirurgeonsapprentice.com/feed/" "http://www.thisiswhyimbroke.com/feed" "http://thoughtinfection.com/feed/" "http://feeds.feedburner.com/uncrate" "http://www.waitbutwhy.com/feed" "http://zompist.wordpress.com/feed/" "http://www.jamesaltucher.com/feed/" "http://physics.ucsd.edu/do-the-math/feed/" "http://fridayinvegas.blogspot.com/feeds/posts/default?alt=rss" "http://feeds.feedburner.com/LazyManAndMoney" "http://feeds.feedburner.com/MrMoneyMustache" "http://www.nakedcapitalism.com/feed" "http://blog.modelworks.ch/?feed=rss2" "http://coolmaterial.com/feed/" "http://everyday-carry.com/rss" "http://putthison.com/rss" "http://www.chefsteps.com/feed" "http://feeds.feedburner.com/smittenkitchen" "http://feeds.feedburner.com/blogspot/summertomato" "http://thatsnerdalicious.com/feed/" "http://www.therailburger.com/index?format=RSS" "http://positech.co.uk/cliffsblog/?feed=rss2" "http://massively.joystiq.com/tag/EVE-Evolved/rss.xml" "http://www.ed.gov/feed" "http://blog.seliger.com/feed/" "http://www.adaringadventure.com/feed/" "http://feeds.feedburner.com/bakadesuyo" "http://feeds.feedburner.com/theminimalists/Hztx" "http://www.tinyhousetalk.com/feed/" "http://feeds.feedburner.com/zenhabits" "http://www.reddit.com/r/ZenHabits/.rss" "http://www.crainscleveland.com/feed/breaking_news" "http://blog.fitbit.com/?feed=rss2" "http://trekohio.com/feed/" "http://awkwardfamilyphotos.com/?feed=rss2" "http://www.craigslist.org/about/best/all/index.rss" "http://fuckinghomepage.com/rss" "http://garfieldminusgarfield.net/rss" "http://godzillahaiku.tumblr.com/rss" "http://obviousplant.tumblr.com/rss" "http://feedproxy.google.com/passiveaggressivenotes" "http://survivetheapocalypse.wordpress.com/feed/" "http://xkcd.com/rss.xml" "http://blog.erratasec.com/feeds/posts/default" "http://infosystir.blogspot.com/feeds/posts/default" "http://krebsonsecurity.com/feed/" "http://feeds.feedburner.com/BrazenCareerist" "https://www.jumpstartinc.org/feed/" "http://feed43.com/1240263800287635.xml" "http://ratracerebellion.com/feed/" "http://management.curiouscatblog.net/feed/" "http://feeds.feedburner.com/LeanBlog" "http://feeds2.feedburner.com/Command-line-fu" "http://www.playterm.org/data/cache/rss-latest.xml" "http://endlessparentheses.com/atom.xml" "http://www.linuxjournal.com/node/feed" "http://www.cyberciti.biz/feed/" "http://en.community.dell.com/techcenter/os-applications/rss" "http://clevelandmagazine.blogspot.com/feeds/posts/default" "http://www.clevescene.com/cleveland/Rss.xml" "http://chetramey.blogspot.com/feeds/posts/default" "http://rustbeltchic.com/feed/" "http://www.thepostnewspapers.com/search/?f=rss&t=article&c=wadsworth&l=50&s=start_time&sd=desc" "http://feeds.feedburner.com/FindingFreeEbooks" "http://longform.org/feed" "http://longreads.com/rss" "http://www.warisboring.com/feed/" "http://feeds.feedburner.com/TheBoyGeniusReport" "http://feeds.feedburner.com/OfficialGoogleMobileBlog" "http://feeds.phonedog.com/phonedog_cellphonereviews" "http://www.quietearth.us/rss.xml" "http://www.patternbased.com/feed/" "http://pitchfork.com/rss/thepitch/" "http://www.foxnews.com/about/rss/feedburner/foxnews/special-report" "http://townhall.com/xml/columnists/author/johnstossel/" "http://mikerowe.com/feed/" "http://www.reason.com/news/index.xml" "http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&topic=h&num=3&output=rss" "http://www.inknouveau.com/feeds/posts/default" "http://feeds2.feedburner.com/advancedlifeskills/MClm" "http://feeds.feedburner.com/DumbLittleMan" "http://gandenberger.org/feed/" "http://feeds.feedburner.com/pickthebrain/LYVv" "http://feeds.feedburner.com/PracticallyEfficient" "http://feeds2.feedburner.com/raptitudecom" "http://feeds.feedburner.com/rudiusmedia/rch" "http://www.stevepavlina.com/blog/feed" "http://www.steve-olson.com/feed/" "http://calnewport.com/blog/feed/" "http://chrisguillebeau.com/3x5/feed/" "http://feeds.feedburner.com/ALifeCoachsBlog" "http://feeds.feedburner.com/TimelessInformation" "http://feeds.feedburner.com/American" "http://maplight.org/rss.xml" "http://talkabout.makelovenotporn.tv/rss" "http://proxypaige.tumblr.com/rss" "http://rockitreports.com/feed/" "http://scoptophilia.blogspot.com/feeds/posts/default?alt=rss" "http://theshapeofamother.com/feed/" "http://vintagepulchritude.blogspot.com/feeds/posts/default" "http://feeds2.feedburner.com/VioletBlueOpenSourceSex" "http://www.productbeautiful.com/feed/" "http://www.svpg.com/articles/rss" "http://feeds.feedburner.com/ItProductManagement" "http://feeds.feedburner.com/The99Percent" "http://donebeforebrekky.com/feed/" "http://drandus.wordpress.com/feed/" "http://blog.gtdnext.com/feed/" "http://emacs.stackexchange.com/feeds/tag?tagnames=org-mode&sort=votes" "http://feeds.feedburner.com/OutlinersoftwareForum" "http://productivity.stackexchange.com/feeds" "http://feeds2.feedburner.com/Smarterware" "http://feeds.feedburner.com/StudyHacks" "http://takingnotenow.blogspot.com/feeds/posts/default" "http://fourhourworkweek.com/blog/feed/" "http://feeds.feedburner.com/unclutterer" "http://edward.oconnor.cx/feed" "http://googleappsdeveloper.blogspot.com/feeds/posts/default" "http://stackoverflow.com/feeds/tag?tagnames=elisp&sort=newest" "http://feeds.feedburner.com/ConnectingTechnologyStrategyAndExecution" "http://www.betterprojects.net/feeds/posts/default" "http://feeds.feedburner.com/wordpress/Kyvt" "http://feeds.feedburner.com/typepad/HerdingCats" "http://rogueprojectleader.blogspot.com/feeds/posts/default?alt=rss" "http://www.scottberkun.com/feed/" "http://feeds.feedburner.com/pmsolutions" "http://pmstudent.com/feed/atom" "http://bps-research-digest.blogspot.com/feeds/posts/default?alt=rss" "http://www.fxckfeelings.com/feed/" "http://www.mindhacks.com/atom.xml" "http://youarenotsosmart.com/feed/" "http://quiterss.org/en/rss.xml" "http://www.marriedmansexlife.com/feeds/posts/default?alt=rss" "http://www.overcomingbias.com/feed" "http://www.quantamagazine.org/feed/" "http://slatestarcodex.com/feed/" "http://www.lastwordonnothing.com/feed/" "http://violentmetaphors.com/feed/" "http://what-if.xkcd.com/feed.atom" "http://www.lovesciencemedia.com/love-science-media/rss.xml" "http://mosex.wordpress.com/feed/" "http://pervocracy.blogspot.com/feeds/posts/default?alt=rss" "http://nextdraft.com/archives/feed/" "http://feeds.arstechnica.com/arstechnica/features/" "https://blog.getremarkable.com/feed" "http://blog.lmorchard.com/index.rss" "http://boughtitonce.com/feed/" "http://feeds.feedburner.com/BrettTerpstra" "http://sudophilosophical.com/feed/" "http://continuations.com/rss" "http://www.coolthings.com/feed/" "http://mcfunley.com/feed/atom" "http://www.devalot.com/feeds/all.rss" "http://googledocs.blogspot.com/atom.xml" "http://emacsredux.com/atom.xml" "http://gmailblog.blogspot.com/atom.xml" "http://chrome.blogspot.com/atom.xml" "http://feeds.feedburner.com/GoogleOperatingSystem" "https://hacked.com/feed/" "http://hnrss.org/newest?points=100" "https://medium.com/feed/hacker-daily" "http://feeds.feedburner.com/HighScalability" "http://ben-evans.com/benedictevans?format=rss" "http://www.howardism.org/index.xml" "http://feeds.feedburner.com/IeeeSpectrum" "http://www.joelonsoftware.com/rss.xml" "http://www.reddit.com/r/emacs/.rss" "http://www.mattcutts.com/blog/feed/" "http://www.nostarch.com/feeds/newbooks.xml" "http://feeds.feedburner.com/oreilly/radar/atom" "http://onethingwell.org/rss" "http://planet.emacsen.org/atom.xml" "http://pragmaticemacs.com/feed/" "http://prodissues.com/feed" "http://www.producthunt.com/feed" "http://sachachua.com/blog/feed" "http://shutupandtakemymoney.com/?feed=rss2" "http://rss.slashdot.org/slashdot/eqWf" "http://www.stilldrinking.org/rss/feed.xml" "http://syndication.thedailywtf.com/TheDailyWtf" "http://googleblog.blogspot.com/atom.xml" "http://feeds.feedburner.com/GoogleAppsUpdates" "http://toolsandtoys.net/feed/" "http://blog.trello.com/feed/" "http://favoriteandforget.com/rss" "http://feeds.wired.com/wired/index" "http://www.atlasobscura.com/feeds/places" "https://travelingwithcysticfibrosis.wordpress.com/feed/" "http://lj.libraryjournal.com/feed/" "http://www.librarytechnology.org/rss/" "http://www.thewhoresofyore.com/14/feed" "https://theconversation.com/us/feeds" "http://www.kurzweilai.net/news/feed/atom" "https://www.bloomberg.com/view/rss/topics/money-stuff.rss" "http://www.techmeme.com/feed.xml" "http://www.tedunangst.com/inks/rss" "https://lobste.rs/rss" "http://wavefunction.fieldofscience.com/feeds/posts/default")))
+    ("https://scienceofsharp.wordpress.com/feed/" "http://bulletjournal.com/feed/" "http://www.threestaples.com/blog?format=RSS" "http://www.wellappointeddesk.com/feed/" "http://www.penaddict.com/blog?format=RSS" "http://wvs.topleftpixel.com/index.rdf" "http://jakubsan.tumblr.com/rss" "http://alanfriedman.tumblr.com/rss" "http://bookshelfporn.com/rss" "http://www.flickr.com/groups_feed.gne?id=35468150438@N01&format=rss_200" "http://clevelandprintroom.com/feed/" "http://www.flickr.com/recent_comments_feed.gne?id=94043197@N00&format=rss_200" "http://api.flickr.com/services/feeds/groups_pool.gne?id=46284008@N00&format=rss_200" "http://gigapan.blogspot.com/feeds/posts/default" "http://www.marcsijan.com/feed/" "http://feeds2.feedburner.com/marcofolio" "http://www.flickr.com/services/feeds/photos_friends.gne?user_id=94043197@N00&format=atom_03&friends=0&display_all=1" "http://api.flickr.com/services/feeds/photos_public.gne?id=94431609@N00&lang=en-us&format=rss_200" "http://api.flickr.com/services/feeds/photos_public.gne?id=58607835@N00&format=atom" "http://fantasygoat.livejournal.com/data/rss" "http://prostheticknowledge.tumblr.com/rss" "http://riotclitshave.livejournal.com/data/atom" "http://riotclitshave.tumblr.com/rss" "http://scifispaceships.tumblr.com/rss" "http://api.flickr.com/services/feeds/groups_pool.gne?id=88514644@N00&format=rss_200" "http://livelymorgue.tumblr.com/rss" "http://transformerstation.org/News/files/feed.xml" "http://api.flickr.com/services/feeds/photos_public.gne?id=48889065425@N01&lang=en-us&format=rss_200" "http://feeds.feedburner.com/avc" "http://feeds.feedburner.com/advancedriskology" "http://feeds.feedburner.com/InstigatorBlog" "http://startuplessonslearned.blogspot.com/feeds/posts/default" "http://sethgodin.typepad.com/seths_blog/atom.xml" "http://www.skmurphy.com/feed/" "http://stratechery.com/feed/" "http://transitionculture.org/feed/" "http://feeds.feedburner.com/ChefSteps" "http://akroncanton.craigslist.org/search/sso?catAbb=sso&excats=97-21-63-6&query=laminate%20flooring&sort=date&format=rss" "http://feeds.feedburner.com/JCCharts" "http://flowingdata.com/feed" "http://feeds.feedburner.com/FlowingData" "http://feeds.feedburner.com/InformationIsBeautiful" "https://www.rstudio.com/feed/" "http://amritrichmond.tumblr.com/rss" "http://feeds.feedburner.com/design-milk" "https://www.format.com/magazine/feed" "http://uxmag.com/rss.xml" "http://3quarksdaily.blogs.com/3quarksdaily/atom.xml" "http://feeds.feedburner.com/alansjourney" "http://www.badassoftheweek.com/rss.xml" "http://boingboing.net/rss.xml" "http://www.dailydot.com/feed/summary/latest/" "http://feeds.feedburner.com/TheThrillingWonderStory" "http://decodedpast.com/feed" "http://www.reddit.com/r/DepthHub/.rss" "http://www.farnamstreetblog.com/feed/atom/" "http://www.kungfugrippe.com/rss" "http://lesswrong.com/.rss" "http://xml.metafilter.com/atom.xml" "http://feeds.feedburner.com/OpenCulture" "http://polyrad.info/feed/" "http://www.quotationspage.com/data/qotd.rss" "http://sciencehorrors.tumblr.com/rss" "http://dilbert.com/blog/entry.feed/" "http://sthelenaonline.org/feed/" "http://stackexchangenocontext.tumblr.com/rss" "http://technabob.com/blog/feed/" "http://thechirurgeonsapprentice.com/feed/" "http://www.thisiswhyimbroke.com/feed" "http://thoughtinfection.com/feed/" "http://feeds.feedburner.com/uncrate" "http://www.waitbutwhy.com/feed" "http://zompist.wordpress.com/feed/" "http://www.jamesaltucher.com/feed/" "http://physics.ucsd.edu/do-the-math/feed/" "http://fridayinvegas.blogspot.com/feeds/posts/default?alt=rss" "http://feeds.feedburner.com/LazyManAndMoney" "http://feeds.feedburner.com/MrMoneyMustache" "http://www.nakedcapitalism.com/feed" "http://blog.modelworks.ch/?feed=rss2" "http://coolmaterial.com/feed/" "http://everyday-carry.com/rss" "http://putthison.com/rss" "http://www.chefsteps.com/feed" "http://feeds.feedburner.com/smittenkitchen" "http://feeds.feedburner.com/blogspot/summertomato" "http://thatsnerdalicious.com/feed/" "http://www.therailburger.com/index?format=RSS" "http://positech.co.uk/cliffsblog/?feed=rss2" "http://massively.joystiq.com/tag/EVE-Evolved/rss.xml" "http://www.ed.gov/feed" "http://blog.seliger.com/feed/" "http://www.adaringadventure.com/feed/" "http://feeds.feedburner.com/bakadesuyo" "http://feeds.feedburner.com/theminimalists/Hztx" "http://www.tinyhousetalk.com/feed/" "http://feeds.feedburner.com/zenhabits" "http://www.reddit.com/r/ZenHabits/.rss" "http://www.crainscleveland.com/feed/breaking_news" "http://blog.fitbit.com/?feed=rss2" "http://trekohio.com/feed/" "http://awkwardfamilyphotos.com/?feed=rss2" "http://www.craigslist.org/about/best/all/index.rss" "http://fuckinghomepage.com/rss" "http://garfieldminusgarfield.net/rss" "http://godzillahaiku.tumblr.com/rss" "http://obviousplant.tumblr.com/rss" "http://feedproxy.google.com/passiveaggressivenotes" "http://survivetheapocalypse.wordpress.com/feed/" "http://xkcd.com/rss.xml" "http://blog.erratasec.com/feeds/posts/default" "http://infosystir.blogspot.com/feeds/posts/default" "http://krebsonsecurity.com/feed/" "http://feeds.feedburner.com/BrazenCareerist" "https://www.jumpstartinc.org/feed/" "http://feed43.com/1240263800287635.xml" "http://ratracerebellion.com/feed/" "http://management.curiouscatblog.net/feed/" "http://feeds.feedburner.com/LeanBlog" "http://feeds2.feedburner.com/Command-line-fu" "http://www.playterm.org/data/cache/rss-latest.xml" "http://endlessparentheses.com/atom.xml" "http://www.linuxjournal.com/node/feed" "http://www.cyberciti.biz/feed/" "http://en.community.dell.com/techcenter/os-applications/rss" "http://clevelandmagazine.blogspot.com/feeds/posts/default" "http://www.clevescene.com/cleveland/Rss.xml" "http://chetramey.blogspot.com/feeds/posts/default" "http://rustbeltchic.com/feed/" "http://www.thepostnewspapers.com/search/?f=rss&t=article&c=wadsworth&l=50&s=start_time&sd=desc" "http://feeds.feedburner.com/FindingFreeEbooks" "http://longform.org/feed" "http://longreads.com/rss" "http://www.warisboring.com/feed/" "http://feeds.feedburner.com/TheBoyGeniusReport" "http://feeds.feedburner.com/OfficialGoogleMobileBlog" "http://feeds.phonedog.com/phonedog_cellphonereviews" "http://www.quietearth.us/rss.xml" "http://www.patternbased.com/feed/" "http://pitchfork.com/rss/thepitch/" "http://www.foxnews.com/about/rss/feedburner/foxnews/special-report" "http://townhall.com/xml/columnists/author/johnstossel/" "http://mikerowe.com/feed/" "http://www.reason.com/news/index.xml" "http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&topic=h&num=3&output=rss" "http://www.inknouveau.com/feeds/posts/default" "http://feeds2.feedburner.com/advancedlifeskills/MClm" "http://feeds.feedburner.com/DumbLittleMan" "http://gandenberger.org/feed/" "http://feeds.feedburner.com/pickthebrain/LYVv" "http://feeds.feedburner.com/PracticallyEfficient" "http://feeds2.feedburner.com/raptitudecom" "http://feeds.feedburner.com/rudiusmedia/rch" "http://www.stevepavlina.com/blog/feed" "http://www.steve-olson.com/feed/" "http://calnewport.com/blog/feed/" "http://chrisguillebeau.com/3x5/feed/" "http://feeds.feedburner.com/ALifeCoachsBlog" "http://feeds.feedburner.com/TimelessInformation" "http://feeds.feedburner.com/American" "http://maplight.org/rss.xml" "http://talkabout.makelovenotporn.tv/rss" "http://proxypaige.tumblr.com/rss" "http://rockitreports.com/feed/" "http://scoptophilia.blogspot.com/feeds/posts/default?alt=rss" "http://theshapeofamother.com/feed/" "http://vintagepulchritude.blogspot.com/feeds/posts/default" "http://feeds2.feedburner.com/VioletBlueOpenSourceSex" "http://www.productbeautiful.com/feed/" "http://www.svpg.com/articles/rss" "http://feeds.feedburner.com/ItProductManagement" "http://feeds.feedburner.com/The99Percent" "http://donebeforebrekky.com/feed/" "http://drandus.wordpress.com/feed/" "http://blog.gtdnext.com/feed/" "http://emacs.stackexchange.com/feeds/tag?tagnames=org-mode&sort=votes" "http://feeds.feedburner.com/OutlinersoftwareForum" "http://productivity.stackexchange.com/feeds" "http://feeds2.feedburner.com/Smarterware" "http://feeds.feedburner.com/StudyHacks" "http://takingnotenow.blogspot.com/feeds/posts/default" "http://fourhourworkweek.com/blog/feed/" "http://feeds.feedburner.com/unclutterer" "http://edward.oconnor.cx/feed" "http://googleappsdeveloper.blogspot.com/feeds/posts/default" "http://stackoverflow.com/feeds/tag?tagnames=elisp&sort=newest" "http://feeds.feedburner.com/ConnectingTechnologyStrategyAndExecution" "http://www.betterprojects.net/feeds/posts/default" "http://feeds.feedburner.com/wordpress/Kyvt" "http://feeds.feedburner.com/typepad/HerdingCats" "http://rogueprojectleader.blogspot.com/feeds/posts/default?alt=rss" "http://www.scottberkun.com/feed/" "http://feeds.feedburner.com/pmsolutions" "http://pmstudent.com/feed/atom" "http://bps-research-digest.blogspot.com/feeds/posts/default?alt=rss" "http://www.fxckfeelings.com/feed/" "http://www.mindhacks.com/atom.xml" "http://youarenotsosmart.com/feed/" "http://quiterss.org/en/rss.xml" "http://www.marriedmansexlife.com/feeds/posts/default?alt=rss" "http://www.overcomingbias.com/feed" "http://www.quantamagazine.org/feed/" "http://slatestarcodex.com/feed/" "http://www.lastwordonnothing.com/feed/" "http://violentmetaphors.com/feed/" "http://what-if.xkcd.com/feed.atom" "http://www.lovesciencemedia.com/love-science-media/rss.xml" "http://mosex.wordpress.com/feed/" "http://pervocracy.blogspot.com/feeds/posts/default?alt=rss" "http://nextdraft.com/archives/feed/" "http://feeds.arstechnica.com/arstechnica/features/" "https://blog.getremarkable.com/feed" "http://blog.lmorchard.com/index.rss" "http://boughtitonce.com/feed/" "http://feeds.feedburner.com/BrettTerpstra" "http://sudophilosophical.com/feed/" "http://continuations.com/rss" "http://www.coolthings.com/feed/" "http://mcfunley.com/feed/atom" "http://www.devalot.com/feeds/all.rss" "http://googledocs.blogspot.com/atom.xml" "http://emacsredux.com/atom.xml" "http://gmailblog.blogspot.com/atom.xml" "http://chrome.blogspot.com/atom.xml" "http://feeds.feedburner.com/GoogleOperatingSystem" "https://hacked.com/feed/" "http://hnrss.org/newest?points=100" "https://medium.com/feed/hacker-daily" "http://feeds.feedburner.com/HighScalability" "http://ben-evans.com/benedictevans?format=rss" "http://www.howardism.org/index.xml" "http://feeds.feedburner.com/IeeeSpectrum" "http://www.joelonsoftware.com/rss.xml" "http://www.reddit.com/r/emacs/.rss" "http://www.mattcutts.com/blog/feed/" "http://www.nostarch.com/feeds/newbooks.xml" "http://feeds.feedburner.com/oreilly/radar/atom" "http://onethingwell.org/rss" "http://planet.emacsen.org/atom.xml" "http://pragmaticemacs.com/feed/" "http://prodissues.com/feed" "http://www.producthunt.com/feed" "http://sachachua.com/blog/feed" "http://shutupandtakemymoney.com/?feed=rss2" "http://rss.slashdot.org/slashdot/eqWf" "http://www.stilldrinking.org/rss/feed.xml" "http://syndication.thedailywtf.com/TheDailyWtf" "http://googleblog.blogspot.com/atom.xml" "http://feeds.feedburner.com/GoogleAppsUpdates" "http://toolsandtoys.net/feed/" "http://blog.trello.com/feed/" "http://favoriteandforget.com/rss" "http://feeds.wired.com/wired/index" "http://www.atlasobscura.com/feeds/places" "https://travelingwithcysticfibrosis.wordpress.com/feed/" "http://lj.libraryjournal.com/feed/" "http://www.librarytechnology.org/rss/" "http://www.thewhoresofyore.com/14/feed" "https://theconversation.com/us/feeds" "http://www.kurzweilai.net/news/feed/atom" "https://www.bloomberg.com/view/rss/topics/money-stuff.rss" "http://www.techmeme.com/feed.xml" "http://www.tedunangst.com/inks/rss" "https://lobste.rs/rss" "http://wavefunction.fieldofscience.com/feeds/posts/default" "http://newsfeed.eveonline.com/en-US/44/articles/page/1/20" "http://newsfeed.eveonline.com/en-US/42/articles/page/1/20" "http://newsfeed.eveonline.com/en-US/2/articles/page/1/20" "http://trekohio.com/feed/")))
  '(fringe-mode (quote (nil . 0)) nil (fringe))
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-tail-colors
@@ -522,15 +511,15 @@ user-mail-address "john@hcmllc.co")
     (("unread" :foreground "#aeee00")
      ("flagged" :foreground "#0a9dff")
      ("deleted" :foreground "#ff2c4b" :bold t))))
- '(org-clock-into-drawer "CLOCK")
+ ;; '(org-clock-into-drawer "CLOCK")
  '(org-log-done (quote time))
- '(org-log-into-drawer "NOTES")
- '(org-log-redeadline (quote time))
- '(org-log-refile (quote time))
- '(org-log-reschedule (quote time))
+ ;; '(org-log-into-drawer "NOTES")
+ ;; '(org-log-redeadline (quote time))
+ ;; '(org-log-refile (quote time))
+ ;; '(org-log-reschedule (quote time))
  '(package-selected-packages
    (quote
-    (pandoc-mode markdown-mode+ markdown-mode swiper ivy zenburn-theme yasnippet xah-find xah-elisp-mode wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit ox-reveal ox-pandoc ox-html5slide org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme magit json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime flx-ido eww-lnum ereader epresent elfeed-goodies darkokai-theme csv-mode company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu)))
+    (counsel pandoc-mode markdown-mode+ markdown-mode swiper ivy zenburn-theme yasnippet xah-find xah-elisp-mode wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit ox-reveal ox-pandoc ox-html5slide org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme magit json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime flx-ido eww-lnum ereader epresent elfeed-goodies darkokai-theme csv-mode company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu)))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(show-paren-mode t)
