@@ -15,6 +15,9 @@
  '(custom-enabled-themes (quote (smart-mode-line-dark)))
  '(hl-line ((t (:inherit nil :background "gainsboro")))))
 
+;; Load theme
+(load-theme 'adwaita)
+
 ;; Set author name and email
 (setq user-full-name "John C. Haprian"
 user-mail-address "john@hcmllc.co")
