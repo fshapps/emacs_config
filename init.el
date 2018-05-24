@@ -19,7 +19,9 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Source Code Pro" :foundry "ADBE" :slant normal :weight normal :height 109 :width normal))))
  '(custom-enabled-themes (quote (smart-mode-line-dark)))
- '(hl-line ((t (:inherit nil :background "gainsboro")))))
+ '(elfeed-search-title-face ((t (:foreground "black"))))
+ '(hl-line ((t (:inherit nil :background "gainsboro"))))
+ '(mode-line-buffer-id-inactive ((t (:inherit mode-line-buffer-id)))))
 
 ;; Set author name and email
 (setq user-full-name "John C. Haprian"
@@ -69,7 +71,16 @@ user-mail-address "john@hcmllc.co")
                             (?\{ . ?\})
                             ))
 
-;; Enable flyspell mode by default
+
+;; Enable ace-window mode for fast window navigation
+;; https://github.com/abo-abo/ace-window
+;;
+;; (global-set-key (kbd "C-x o") 'ace-window)
+;; Alternative key binding
+(global-set-key (kbd "M-o") 'ace-window)
+
+;;
+;; FLYSPELL
 ;; http://stackoverflow.com/questions/6860750/how-to-enable-flyspell-mode-in-emacs-for-all-files-and-all-major-modes
 ;; This does the squiggly line thingy
 (add-hook 'text-mode-hook 'flyspell-mode)
@@ -88,6 +99,10 @@ user-mail-address "john@hcmllc.co")
 
 ;; Enable company mode for all buffers
 (add-hook 'after-init-hook 'global-company-mode)
+
+;; Enable flx fuzzy search for company mode
+(with-eval-after-load 'company
+      (company-flx-mode +1))
 
 ;; yasnippet templating
 ;; https://github.com/joaotavora/yasnippet
@@ -128,6 +143,16 @@ user-mail-address "john@hcmllc.co")
 (prefer-coding-system 'utf-8)
 (set-charset-priority 'unicode)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+
+;;
+;; Initialize Deft
+;; https://jblevins.org/projects/deft/
+;; 
+;;
+(require 'deft)
+(setq deft-extensions '("txt" "tex" "org"))
+(setq deft-directory "~/Dropbox/Notes/Deft")
+(setq deft-recursive t)
 
 ;;
 ;; ORG MODE
@@ -247,8 +272,12 @@ user-mail-address "john@hcmllc.co")
 
 ;; Make org-refile-targets work better w/ Counsel?
 ;; https://github.com/abo-abo/swiper/issues/444
-(setq org-refile-use-outline-path 'file
-      org-outline-path-complete-in-steps nil)
+(setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
+
+;; Allow refile to create new parent nodes
+;; https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html
+(setq org-refile-allow-creating-parent-nodes 'confirm)
 
 ;; Automatically change list bullets
 ;; Makes it easier to read deeply nested lists
@@ -268,6 +297,15 @@ user-mail-address "john@hcmllc.co")
 ;; Include archive files in org-mode search
 ;; http://doc.norang.ca/org-mode.html#SearchesIncludeArchiveFiles
 (setq org-agenda-text-search-extra-files (quote (agenda-archives)))
+
+
+;; Super charge that agenda view!!
+;; https://github.com/alphapapa/org-super-agenda
+;; (use-package org-super-agenda :config (org-super-agenda-mode))
+;; (let ((org-super-agenda-groups
+;;        '((:auto-category t))))
+;;   (org-agenda-list))
+
 
 ;;
 ;; EWW Web Browser
@@ -323,11 +361,22 @@ user-mail-address "john@hcmllc.co")
 ;; Note: The customize interface is also supported.
 (setq rmh-elfeed-org-files (list "/home/john/Dropbox/Notes/rss.org"))
 
+;; Disable arrow keys to force practicing key nav
+;; Yeah, I know. But it's for your own good.
+;; https://superuser.com/questions/437953/disable-arrow-keys-in-emacs
+(global-unset-key (kbd "<left>"))
+(global-unset-key (kbd "<right>"))
+(global-unset-key (kbd "<up>"))
+(global-unset-key (kbd "<down>"))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(elfeed-goodies/entry-pane-position (quote bottom))
+ '(elfeed-goodies/feed-source-column-width 40)
+ '(elfeed-goodies/tag-column-width 0)
  '(package-selected-packages
    (quote
-    (elfeed-org htmlize zenburn-theme yasnippet xah-find xah-elisp-mode wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit pandoc-mode ox-reveal ox-pandoc ox-html5slide ox-gfm org-web-tools org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme markdown-mode+ json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime git-commit flx-ido eww-lnum ereader epresent elfeed-goodies deft darkokai-theme csv-mode counsel company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu))))
+    (use-package org-super-agenda ace-window company-flx elfeed-org htmlize zenburn-theme yasnippet xah-find xah-elisp-mode wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit pandoc-mode ox-reveal ox-pandoc ox-html5slide ox-gfm org-web-tools org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme markdown-mode+ json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime git-commit flx-ido eww-lnum ereader epresent deft darkokai-theme csv-mode counsel company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu))))
