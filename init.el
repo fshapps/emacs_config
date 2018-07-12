@@ -10,7 +10,7 @@
 (package-initialize)
 
 ;; Load theme
-(load-theme 'adwaita)
+;; (load-theme 'adwaita)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -29,6 +29,17 @@ user-mail-address "john@hcmllc.co")
 
 ;; Set default directory
 (setq default-directory "/home/john/Dropbox/Notes")
+
+;; Tuck backups away
+;; https://www.emacswiki.org/emacs/BackupDirectory
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.saves/"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
 
 ;; Screw scratch
 (setq initial-scratch-message nil)
@@ -60,6 +71,27 @@ user-mail-address "john@hcmllc.co")
 ;; Wrap all the lines!
 (global-visual-line-mode t)
 
+;; Global undo tree goodness
+;; https://www.emacswiki.org/emacs/UndoTree
+(global-undo-tree-mode)
+
+;; Winner Mode FTW
+;; https://www.emacswiki.org/emacs/WinnerMode
+(winner-mode 1)
+
+;; Twitter in Emacs? Sure. Why the hell not.
+;; https://github.com/hayamiz/twittering-mode
+(setq twittering-icon-mode t)
+(setq twittering-use-master-password t)
+
+;; Save desktop configuration between sessions
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emacs-Sessions.html
+(desktop-save-mode 1)
+
+;; Sort apropos command search results based on relevancy
+;; See "Mastering Emacs" book
+(setq apropos-sort-by-scores t)
+
 ;; auto close bracket insertion. New in emacs 24
 ;; http://ergoemacs.org/emacs/emacs_insert_brackets_by_pair.html
 ;; http://prodissues.com/2016/10/electric-pair-mode-in-emacs.html
@@ -79,12 +111,39 @@ user-mail-address "john@hcmllc.co")
 ;; Alternative key binding
 (global-set-key (kbd "M-o") 'ace-window)
 
+;; org-protocol
+;; https://github.com/sprig/org-capture-extension
+;; Can't get the damn thing to work. Tired of yak shaving for now.
+;; (server-start)
+;; (add-to-list 'load-path "~/path/to/org/protocol/")
+;; (require 'org-protocol)
+
+;;
+;; NOV
+;;
+;; Read epubs in emacs? Why the fuck not?
+;; https://github.com/wasamasa/nov.el
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+
 ;;
 ;; FLYSPELL
 ;; http://stackoverflow.com/questions/6860750/how-to-enable-flyspell-mode-in-emacs-for-all-files-and-all-major-modes
 ;; This does the squiggly line thingy
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;; (add-hook 'text-mode-hook 'flyspell-mode)
+;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;; Pimped out Flyspell
+;; https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_better_manage_your_spelling_mistakes/
+(use-package flyspell
+  :defer 1
+  :custom
+  (flyspell-issue-message-flag nil)
+  (flyspell-mode 1))
+
+(use-package flyspell-correct-ivy
+  :after flyspell
+  :bind (:map flyspell-mode-map
+        ("C-;" . flyspell-correct-word-generic))
+  :custom (flyspell-correct-interface 'flyspell-correct-ivy))
 
 ;; Make ispell use the more capable Hunspell
 ;; https://joelkuiper.eu/spellcheck_emacs
@@ -137,6 +196,10 @@ user-mail-address "john@hcmllc.co")
 ;; https://www.reddit.com/r/emacs/comments/4bzj6a/how_to_get_orgmode_emphasis_markup_et_al_to/
 (setq org-hide-emphasis-markers t)
 
+;; Get rid of annoying prompt when saving multiple buffers
+;; https://stackoverflow.com/questions/35658509/gnu-emacs-how-to-disable-prompt-to-save-modified-buffer-on-exit
+(set-buffer-modified-p nil)
+
 ;; Set UTF-8 as default encoding
 ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
 (setq org-export-coding-system 'utf-8)
@@ -154,6 +217,19 @@ user-mail-address "john@hcmllc.co")
 (setq deft-directory "~/Dropbox/Notes/Deft")
 (setq deft-recursive t)
 
+;; PDF-Tools bitches!
+;; http://pragmaticemacs.com/emacs/more-pdf-tools-tweaks/
+(use-package pdf-tools
+ :config
+ ;; initialise
+ (pdf-tools-install)
+ ;; open pdfs scaled to fit page
+ (setq-default pdf-view-display-size 'fit-page)
+ ;; automatically annotate highlights
+ (setq pdf-annot-activate-created-annotations t)
+ ;; use normal isearch
+ (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+
 ;;
 ;; ORG MODE
 ;;
@@ -162,8 +238,19 @@ user-mail-address "john@hcmllc.co")
 ; http://zeekat.nl/articles/making-emacs-work-for-me.html#sec-10-6
 (require 'org-agenda)
 
+;; Make org-web-tools functions available
+;; https://github.com/alphapapa/org-web-tools
+(require 'org-web-tools)
+
 ; Configure agenda view to search all org files
-(setq org-agenda-files '("/home/john/Dropbox/Notes"))
+(setq org-agenda-files '("/home/john/Dropbox/Notes/"))
+
+;; Configure the order files are displayed in org-mode agenda
+;; https://orgmode.org/worg/org-tutorials/orgtutorial_dto.html
+;; (setq org-agenda-files (list "~/Dropbox/Notes/inbox.org"
+;;                              "~/Dropbox/Notes/career.org"
+;;      			     "~/Dropbox/Notes/personal.org"
+;;                              "~/Dropbox/Notes/bluetip.org"))
 
 ;; Wrap lines
 (setq org-startup-indented t)
@@ -178,8 +265,27 @@ user-mail-address "john@hcmllc.co")
 
 ; Configure Exporter options
 (require 'ox-pandoc nil t)
-(require 'ox-html5slide)
-(require 'ox-odt)
+(require 'ox-html5slide nil t)
+(require 'ox-odt nil t)
+(require 'ox-gfm nil t)
+
+;;
+;; ORG-BABEL
+;; https://www.reddit.com/r/emacs/comments/2oy20n/babel_and_orgmode_for_devopslike_work/
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (shell . t)
+   (sh . t)
+   (python . t)
+   (R . t)
+   (ditaa . t)
+   (dot . t)
+   ))
+;; Syntax highlight in #+BEGIN_SRC blocks
+(setq org-src-fontify-natively t)
+;; Don't prompt before running code in org
+(setq org-confirm-babel-evaluate nil)
 
 ; Short key bindings for capturing notes/links and switching to agenda.
 ; http://zeekat.nl/articles/making-emacs-work-for-me.html#sec-10-6
@@ -258,14 +364,23 @@ user-mail-address "john@hcmllc.co")
 ;; (setq org-default-notes-file (concat org-directory "/home/john/Dropbox/Notes/inbox.org"))
 (define-key global-map "\C-cc" 'org-capture)
 
+;; org-protocol config failure *sad trombone*
+;; (setq org-capture-templates `(
+;; 	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+;;         "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+;; 	("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+;;         "* %? [[%:link][%:description]] \nCaptured On: %U")
+;; ))
+
 ;; Configure capture mode templates
 (setq org-capture-templates
       '(("t" "Todo" entry (file "/home/john/Dropbox/Notes/inbox.org")
-	 "* TODO %?")
+	 "* TODO %?")	
 	 ("n" "Note" entry (file "/home/john/Dropbox/Notes/inbox.org")
 	  "* %?\n\n%U")
-	 ("j" "Journal" plain (file+datetree "/home/john/Dropbox/Notes/journal.org")
+	 ("j" "Journal" plain (file+olp+datetree "/home/john/Dropbox/Notes/journal.org")
 	  "%U\n\n%?")))
+
 
 ;; Configure org-mode re-file
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 8))))
@@ -308,11 +423,20 @@ user-mail-address "john@hcmllc.co")
 
 
 ;;
+;; org-chef
+;; https://github.com/Chobbes/org-chef
+;;
+(require 'use-package)
+
+(use-package org-chef
+  :ensure t)
+
+;;
 ;; EWW Web Browser
 ;;
 
 ;; Set EWW as default web browser in emacs
-;; (setq browse-url-browser-function 'eww-browse-url)
+(setq browse-url-browser-function 'eww-browse-url)
 
 ;; Open each page in a new buffer
 ;; http://emacs.stackexchange.com/questions/24472/simple-method-for-creating-multiple-eww-buffers
@@ -364,19 +488,25 @@ user-mail-address "john@hcmllc.co")
 ;; Disable arrow keys to force practicing key nav
 ;; Yeah, I know. But it's for your own good.
 ;; https://superuser.com/questions/437953/disable-arrow-keys-in-emacs
-(global-unset-key (kbd "<left>"))
-(global-unset-key (kbd "<right>"))
-(global-unset-key (kbd "<up>"))
-(global-unset-key (kbd "<down>"))
+;; (global-unset-key (kbd "<left>"))
+;; (global-unset-key (kbd "<right>"))
+;; (global-unset-key (kbd "<up>"))
+;; (global-unset-key (kbd "<down>"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (adwaita)))
  '(elfeed-goodies/entry-pane-position (quote bottom))
  '(elfeed-goodies/feed-source-column-width 40)
  '(elfeed-goodies/tag-column-width 0)
+ '(flyspell-correct-interface (quote flyspell-correct-ivy) t)
+ '(flyspell-issue-message-flag nil)
+ '(flyspell-mode 1 t)
  '(package-selected-packages
    (quote
-    (use-package org-super-agenda ace-window company-flx elfeed-org htmlize zenburn-theme yasnippet xah-find xah-elisp-mode wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit pandoc-mode ox-reveal ox-pandoc ox-html5slide ox-gfm org-web-tools org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme markdown-mode+ json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime git-commit flx-ido eww-lnum ereader epresent deft darkokai-theme csv-mode counsel company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu))))
+    (nov ox-minutes magit org-noter org-chef org-present opener use-package org-super-agenda ace-window company-flx elfeed-org htmlize zenburn-theme yasnippet xah-find xah-elisp-mode wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit pandoc-mode ox-reveal ox-pandoc ox-html5slide ox-gfm org-web-tools org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme markdown-mode+ json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime git-commit flx-ido eww-lnum ereader epresent deft darkokai-theme csv-mode counsel company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu)))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
