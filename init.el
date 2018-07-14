@@ -30,6 +30,11 @@ user-mail-address "john@hcmllc.co")
 ;; Set default directory
 (setq default-directory "/home/john/Dropbox/Notes")
 
+;; Set default frame size
+;; https://www.emacswiki.org/emacs/FrameSize
+(add-to-list 'default-frame-alist '(height . 20))
+(add-to-list 'default-frame-alist '(width . 84))
+
 ;; Tuck backups away
 ;; https://www.emacswiki.org/emacs/BackupDirectory
 (setq
@@ -200,12 +205,38 @@ user-mail-address "john@hcmllc.co")
 ;; https://stackoverflow.com/questions/35658509/gnu-emacs-how-to-disable-prompt-to-save-modified-buffer-on-exit
 (set-buffer-modified-p nil)
 
+;; Better Buffer Naming
+;; https://github.com/Compro-Prasad/simple-emacs/blob/master/init.el
+uniquify-buffer-name-style 'forward
+
+;; Increase kill ring max capacity
+;; https://github.com/Compro-Prasad/simple-emacs/blob/master/init.el
+kill-ring-max 1024
+
+;; Scroll preserving screen position
+;; https://github.com/Compro-Prasad/simple-emacs/blob/master/init.el
+scroll-preserve-screen-position 'always
+
+;; Scroll one line at a time
+;; https://github.com/Compro-Prasad/simple-emacs/blob/master/init.el
+scroll-step            1
+scroll-conservatively  10000
+mouse-wheel-scroll-amount '(1 ((shift) . 1))
+
+;; Fixes some TLS connections
+;; https://github.com/Compro-Prasad/simple-emacs/blob/master/init.el
+gnutls-min-prime-bits 4096
+
 ;; Set UTF-8 as default encoding
-;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
-(setq org-export-coding-system 'utf-8)
+;; https://github.com/Compro-Prasad/simple-emacs/blob/master/init.el
+(set-language-environment 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-locale-environment "en.UTF-8")
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
-(set-charset-priority 'unicode)
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+(setq buffer-file-coding-system 'utf-8)
 
 ;;
 ;; Initialize Deft
@@ -241,6 +272,10 @@ user-mail-address "john@hcmllc.co")
 ;; Make org-web-tools functions available
 ;; https://github.com/alphapapa/org-web-tools
 (require 'org-web-tools)
+
+;; Something about eww & capturing URLs in org. Sounded interesting.
+;; https://www.reddit.com/r/emacs/comments/8yb69h/capture_link_to_web_page_opened_in_ewww/
+(use-package org-eww :after eww)
 
 ; Configure agenda view to search all org files
 (setq org-agenda-files '("/home/john/Dropbox/Notes/"))
