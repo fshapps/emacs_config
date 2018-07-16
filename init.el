@@ -277,12 +277,12 @@ mouse-wheel-scroll-amount '(1 ((shift) . 1))
 (use-package org-eww :after eww)
 
 ; Configure agenda view to search all org files
-(setq org-agenda-files '("/home/john/Dropbox/Notes/"))
+(setq org-agenda-files '("~/Dropbox/Notes/"))
 
 ;; Append all archive files to org-agenda-files
 ;; Bastardized version of https://orgmode.org/worg/org-tutorials/org-custom-agenda-commands.html
 (setq org-agenda-text-search-extra-files
-      (file-expand-wildcards "~/Dropbox/Notes/*.org_archive"))
+     (file-expand-wildcards "~/Dropbox/Notes/*.org_archive"))
 
 ;; Wrap lines
 (setq org-startup-indented t)
@@ -524,9 +524,6 @@ mouse-wheel-scroll-amount '(1 ((shift) . 1))
  '(flyspell-correct-interface (quote flyspell-correct-ivy) t)
  '(flyspell-issue-message-flag nil)
  '(flyspell-mode 1 t)
- '(org-agenda-files
-   (quote
-    ("~/Dropbox/Notes/#inbox.org#" "~/Dropbox/Notes/SBIR.org_archive" "~/Dropbox/Notes/alpha.org_archive" "~/Dropbox/Notes/arisdyne.org_archive" "~/Dropbox/Notes/bluetip.org" "~/Dropbox/Notes/bluetip.org_archive" "~/Dropbox/Notes/chores.org" "~/Dropbox/Notes/chores.org_archive" "~/Dropbox/Notes/fha.org_archive" "~/Dropbox/Notes/hcm.org_archive" "~/Dropbox/Notes/inbox.org" "~/Dropbox/Notes/inbox.org_archive" "~/Dropbox/Notes/job_hunt.org_archive" "~/Dropbox/Notes/journal.org" "~/Dropbox/Notes/lbry.org_archive" "~/Dropbox/Notes/mtd.org_archive" "~/Dropbox/Notes/notes.org_archive" "~/Dropbox/Notes/personal.org" "~/Dropbox/Notes/personal.org_archive" "~/Dropbox/Notes/phonebail.org" "~/Dropbox/Notes/pmp.org" "~/Dropbox/Notes/programming.org" "~/Dropbox/Notes/projects.org_archive" "~/Dropbox/Notes/reference.org" "~/Dropbox/Notes/rss.org" "~/Dropbox/Notes/tasks.org_archive" "~/Dropbox/Notes/uwgc.org_archive" "~/Dropbox/Notes/wpl.org_archive")))
  '(package-selected-packages
    (quote
     (nov ox-minutes magit org-noter org-chef org-present opener use-package org-super-agenda ace-window company-flx elfeed-org htmlize zenburn-theme yasnippet xah-find xah-elisp-mode wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit pandoc-mode ox-reveal ox-pandoc ox-html5slide ox-gfm org-web-tools org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme markdown-mode+ json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime git-commit flx-ido eww-lnum ereader epresent deft darkokai-theme csv-mode counsel company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu)))
