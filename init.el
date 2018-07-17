@@ -308,6 +308,10 @@ mouse-wheel-scroll-amount '(1 ((shift) . 1))
  'org-babel-load-languages
  '(
    (shell . t)
+   (emacs-lisp . t)
+   (awk . t)
+   (latex . t)
+   (sed . t)
    (python . t)
    (R . t)
    (ditaa . t)
