@@ -20,7 +20,6 @@
  '(default ((t (:family "Source Code Pro" :foundry "ADBE" :slant normal :weight normal :height 109 :width normal))))
  '(custom-enabled-themes (quote (smart-mode-line-dark)))
  '(elfeed-search-title-face ((t (:foreground "black"))))
- '(hl-line ((t (:inherit nil :background "gainsboro"))))
  '(mode-line-buffer-id-inactive ((t (:inherit mode-line-buffer-id)))))
 
 ;; Set author name and email
@@ -295,7 +294,8 @@ mouse-wheel-scroll-amount '(1 ((shift) . 1))
 ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
 (setq org-agenda-window-setup 'current-window)
 
-; Configure Exporter options
+;; Configure Exporter options
+(require 'ox)
 (require 'ox-pandoc nil t)
 (require 'ox-html5slide nil t)
 (require 'ox-odt nil t)
@@ -444,9 +444,8 @@ mouse-wheel-scroll-amount '(1 ((shift) . 1))
 ;; http://doc.norang.ca/org-mode.html#AgendaViewTweaks
 (setq org-alphabetical-lists t)
 
-
 ;;
-;; org-chef
+;; ORG-CHEF
 ;; https://github.com/Chobbes/org-chef
 ;;
 (require 'use-package)
@@ -530,6 +529,6 @@ mouse-wheel-scroll-amount '(1 ((shift) . 1))
  '(flyspell-mode 1 t)
  '(package-selected-packages
    (quote
-    (nov ox-minutes magit org-noter org-chef org-present opener use-package org-super-agenda ace-window company-flx elfeed-org htmlize zenburn-theme yasnippet xah-find xah-elisp-mode wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit pandoc-mode ox-reveal ox-pandoc ox-html5slide ox-gfm org-web-tools org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme markdown-mode+ json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime git-commit flx-ido eww-lnum ereader epresent deft darkokai-theme csv-mode counsel company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu)))
+    (org auto-org-md nov ox-minutes magit org-chef org-present opener use-package org-super-agenda ace-window company-flx elfeed-org htmlize zenburn-theme yasnippet xah-find wn-mode w3m visual-regexp-steroids undo-tree twittering-mode sml-modeline sml-mode smex smart-mode-line popup parse-csv paredit ox-reveal ox-pandoc ox-html5slide ox-gfm org-web-tools org-pdfview org-if org-grep org-download org-bullets olivetti multiple-cursors monokai-theme moe-theme markdown-mode+ json-mode ido-vertical-mode ido-ubiquitous ido-sort-mtime git-commit flx-ido eww-lnum ereader epresent deft darkokai-theme csv-mode counsel company browse-kill-ring badwolf-theme avy atom-one-dark-theme atom-dark-theme anzu)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
